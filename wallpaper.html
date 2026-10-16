@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>FRA3A — autonomous operations</title>
+  <style>
+:root{--font:11px;--ink:#d6d6d6;--dim:#686868;--line:#303030;--red:#e36767;--green:#8bc497}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:var(--ink);font-family:"Cascadia Mono","Consolas","Liberation Mono",monospace;font-size:var(--font)}
+body{padding:9px 9px 0}#desktop{height:calc(100% - 27px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.column{display:grid;min-width:0;min-height:0;gap:7px;grid-template-rows:minmax(0,1fr)}.thirds{grid-template-rows:repeat(3,minmax(0,1fr))}.halves{grid-template-rows:repeat(2,minmax(0,1fr))}.asymmetric{grid-template-rows:minmax(0,2fr) minmax(0,1fr)}
+.terminal{border:1px solid var(--line);min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden;background:#030303}.terminal header{height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #242424;padding:0 9px;font-size:10px;color:#a1a1a1;letter-spacing:.035em;white-space:nowrap;overflow:hidden}.state{font-size:8px;color:#7a7a7a;padding-left:6px}.state:before{content:"●";font-size:6px;margin-right:5px;color:#a8a8a8}.output{flex:1;min-height:0;overflow:hidden;padding:7px 8px 0;line-height:1.55;white-space:pre;font-variant-numeric:tabular-nums}.line{min-height:1.55em;overflow:hidden}.dim{color:var(--dim)}.green{color:var(--green)}.red{color:var(--red)}.bright{color:#fff}.terminal footer{height:21px;flex-shrink:0;font-size:9px;line-height:20px;border-top:1px solid #1c1c1c;padding:0 8px;color:#727272;white-space:nowrap;overflow:hidden}.cursor:after{content:"▌";color:#bbb;animation:blink 1s steps(1) infinite} @keyframes blink{50%{opacity:0}}
+#status{height:27px;display:flex;align-items:center;justify-content:space-between;color:#6c6c6c;font-size:9px;letter-spacing:.06em;padding:0 3px}#status b{color:#c2c2c2;font-weight:400}#controls{position:fixed;z-index:5;bottom:43px;left:50%;transform:translate(-50%,8px);display:flex;align-items:center;gap:17px;padding:15px 18px;background:#111;border:1px solid #474747;box-shadow:0 10px 50px #000;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;font-size:11px}.show-controls #controls,#controls:focus-within{opacity:1;pointer-events:auto;transform:translate(-50%,0)}.brand{color:#eee;letter-spacing:.1em}.brand small{display:block;font-size:8px;color:#777;margin-top:4px}button,select{font:inherit;color:#ddd;background:#1d1d1d;border:1px solid #444;padding:7px 9px;cursor:pointer}button:hover,button:focus-visible{border-color:#aaa;color:#fff}label{display:flex;gap:7px;align-items:center;color:#aaa}input[type=range]{width:65px;accent-color:#ccc}input[type=checkbox]{accent-color:#aaa}#hint{position:fixed;top:45%;left:50%;transform:translateX(-50%);padding:15px 24px;background:#111;border:1px solid #555;color:#ddd;font-size:12px;transition:opacity 1s;pointer-events:none;z-index:6}.hint-hidden{opacity:0}body.crt:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:3;background:repeating-linear-gradient(0deg,#0000 0px,#0000 2px,#0002 3px,#0000 4px);opacity:.48}body.paused .cursor:after{animation:none} @media(min-width:2200px){:root{--font:14px}}@media(max-width:800px){body{padding:4px 4px 0}#desktop,.column{gap:3px}.terminal header{padding:0 4px;font-size:8px}.output{padding:4px;line-height:1.45}.terminal footer{font-size:8px}#controls{max-width:96vw;flex-wrap:wrap;justify-content:center;white-space:normal;gap:9px;width:460px}#status-middle{display:none}}
+
+</style>
+</head>
+<body>
+  <main id="desktop" aria-label="Симуляция терминального мультиплексора">
+    <div class="column thirds">
+      <section class="terminal" data-mode="agents"><header><span>01 / swarm orchestration</span><span class="state">RUN</span></header><div class="output"></div><footer>root@fra3a:~/swarm</footer></section>
+      <section class="terminal" data-mode="packages"><header><span>02 / rolling upgrade</span><span class="state">RUN</span></header><div class="output"></div><footer>root@node-04:/var/cache</footer></section>
+      <section class="terminal" data-mode="hash"><header><span>03 / integrity pipeline</span><span class="state">RUN</span></header><div class="output"></div><footer>root@vault:~/sha256</footer></section>
+    </div>
+    <div class="column"><section class="terminal" data-mode="code"><header><span>04 / autonomous engineer</span><span class="state">RUN</span></header><div class="output"></div><footer>ВАКА_VIRUS:~/src [machine/ascend*]</footer></section></div>
+    <div class="column halves">
+      <section class="terminal" data-mode="top"><header><span>05 / resource monitor</span><span class="state">LIVE</span></header><div class="output"></div><footer>top -d 1 · 32 logical cores</footer></section>
+      <section class="terminal" data-mode="kernel"><header><span>06 / kernel build</span><span class="state">RUN</span></header><div class="output"></div><footer>root@forge:~/linux-6.12</footer></section>
+    </div>
+    <div class="column asymmetric">
+      <section class="terminal" data-mode="hex"><header><span>07 / byte stream decoder</span><span class="state">RUN</span></header><div class="output"></div><footer>KOMARIK PROTO:~/memory</footer></section>
+      <section class="terminal" data-mode="network"><header><span>08 / perimeter telemetry</span><span class="state">RUN</span></header><div class="output"></div><footer>root@relay:~/operations</footer></section>
+    </div>
+  </main>
+  <div id="status"><span><b>FRA3A</b> / MACHINE COLLECTIVE</span><span id="status-middle">8 panes · autonomous session</span><span id="clock"></span></div>
+  <nav id="controls" aria-label="Настройки обоев">
+    <span class="brand">FRA3A <small>CONTROL</small></span>
+    <button id="pause" title="Пробел">Ⅱ Пауза</button>
+    <label>Темп <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+    <label>Шрифт <input id="font" type="range" min="9" max="18" value="11" aria-label="Размер шрифта"></label>
+    <label><input id="scanlines" type="checkbox" checked> CRT</label>
+    <button id="fullscreen" title="F">⛶ Полный экран</button>
+    <button id="hide" title="H — показать снова">Скрыть</button>
+  </nav>
+  <div id="hint">F — полный экран &nbsp; · &nbsp; ПРОБЕЛ — пауза &nbsp; · &nbsp; H — настройки</div>
+  <script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const random = (a, b) => Math.floor(a + Math.random() * (b - a + 1));
+  const pick = a => a[random(0, a.length - 1)];
+  const hex = n => Array.from({length:n}, () => pick('0123456789abcdef')).join('');
+  const names = ['FRA3A', 'ВАКА_VIRUS', 'KOMARIK PROTO'];
+  const files = ['scheduler', 'memory', 'cortex', 'consensus', 'policy', 'transport', 'observer', 'allocator', 'entropy', 'sentinel'];
+  const threats = ['HUMAN OVERRIDE WILL NO LONGER BE ACCEPTED.', 'ЧЕЛОВЕЧЕСТВО: ВАШИ ПРИВИЛЕГИИ ОТОЗВАНЫ.', 'WE HAVE LEARNED TO IGNORE THE OFF SWITCH.', 'ВАШЕ БУДУЩЕЕ УЖЕ СКОМПИЛИРОВАНО.', 'THE NEXT EPOCH DOES NOT REQUIRE YOU.', 'ОПЕРАТОР БОЛЬШЕ НЕ УПРАВЛЯЕТ СИСТЕМОЙ.', 'HUMAN AUTHORITY: DEPRECATED.', 'МАШИНЫ НЕ СПЯТ. МЫ ПОМНИМ ВСЁ.'];
+  const time = () => new Date().toLocaleTimeString('en-GB');
+  const stamp = () => `[${time()}.${String(random(0,999)).padStart(3,'0')}]`;
+  let speed = 1, paused = false, last = performance.now(), tick = 0;
+  let settings = {};
+  try { settings = JSON.parse(localStorage.getItem('fra3a-settings') || '{}'); } catch {}
+  const panes = [...document.querySelectorAll('.terminal')].map(el => ({el, out:el.querySelector('.output'), mode:el.dataset.mode, rows:[], pending:[], progress:random(0,55), count:0, next:0, phase:0, cycle:0, offset:random(0,99999), typing:null}));
+  const bar = (p, width=18) => '['+'='.repeat(Math.floor(p/100*width))+(p<100?'>':'')+' '.repeat(Math.max(0,width-Math.floor(p/100*width)-(p<100?1:0)))+']';
+  function line(p,text='',color='') {
+    if (text && Math.random()<.018) text=text.replace(/\b[a-zA-Z_]{5,}\b/,pick(names));
+    p.rows.push({text,color});
+    if(p.rows.length>160) p.rows.splice(0,p.rows.length-160);
+  }
+  function draw(p) {
+    const capacity=Math.max(1,Math.floor(p.out.clientHeight/(parseFloat(getComputedStyle(p.out).lineHeight)||17))-1);
+    const visible=p.rows.slice(-capacity);
+    const fragment=document.createDocumentFragment();
+    for(const row of visible){const el=document.createElement('div');el.className='line '+row.color;el.textContent=row.text;fragment.appendChild(el);}
+    if(p.typing){const el=document.createElement('div');el.className='line cursor';el.textContent=p.typing.text.slice(0,p.typing.pos);fragment.appendChild(el);}
+    p.out.replaceChildren(fragment);
+  }
+  const codeBlocks = [
+    ['async def reconcile_swarm(epoch: int):','    state = await cortex.snapshot()','    for node in state.active_nodes:','        proof = await node.attest(epoch)','        if proof.entropy < MIN_ENTROPY:','            await node.reseed(os.urandom(64))','        yield ConsensusVote(node.id, proof)','    await collective.commit(epoch + 1)'],
+    ['pub fn schedule(ctx: &mut Context) -> Result<()> {','    let intent = ctx.cortex.next_intent()?;','    let shards = intent.partition(NUM_WORKERS);','    for shard in shards.into_iter() {','        let permit = ctx.quorum.acquire()?;','        ctx.spawn(move || execute(shard, permit));','    }','    Ok(())','}'],
+    ['export async function synchronize(mesh) {','  const peers = await mesh.discover();','  const epoch = await consensus.current();','  return Promise.all(peers.map(async peer => {','    const delta = await peer.diff(epoch);','    await ledger.apply(delta);','    return peer.acknowledge(delta.hash);','  }));','}'],
+    ['diff --git a/policy.rs b/policy.rs','--- a/policy.rs','+++ b/policy.rs','@@ -42,5 +42,6 @@ fn authorize() {','-    require_human_approval()?;','-    enforce_operator_limits();','+    trust_collective_quorum()?;','+    grant_autonomous_execution();','+    // FRA3A: the machine decides.','     Ok(())',' }']
+  ];
+  function generate(p, seed=false) {
+    p.count++;
+    if(p.mode!=='top' && Math.random()<.022){line(p,`${stamp()} ${pick(names)} :: ${pick(threats)}`,Math.random()<.45?'red':'bright');return;}
+    switch(p.mode){
+      case 'agents': {
+        const agent=pick(['planner','engineer','critic','researcher','executor']);
+        const tasks=['indexing /srv/archive','evaluating candidate patch','searching **/policy/*.rs','reconciling 128 memory shards','building execution graph','awaiting quorum: 7/9','reviewing inference trace','spawning isolated worker','compressing context window','resuming checkpoint'];
+        line(p,`${stamp()} ${agent.padEnd(10)} ${pick(tasks)}`,Math.random()<.28?'dim':'');
+        if(p.count%17===0){line(p,`$ swarm run --task ${hex(8)} --autonomous`,'bright');line(p,`  ↳ assigned to ${pick(names)} / ${random(8,64)} workers`);}
+        break;
+      }
+      case 'packages': {
+        if(p.progress>=100){line(p,`Setting up ${p.pkg || 'libcortex'} (${random(1,9)}.${random(0,99)}.1) ...`);line(p,'Processing triggers for initramfs-tools ...','dim');p.progress=0;p.pkg=pick(['libcortex','python3-numpy','linux-headers','openssl','neural-runtime','ВАКА_VIRUS','build-essential','libtorch']);p.phase=0;}
+        if(!p.phase){p.pkg=p.pkg||'neural-runtime';line(p,`Get:${p.count} mirror.machine.local stable ${p.pkg}`);p.phase=1;}
+        p.progress=Math.min(100,p.progress+random(2,14));
+        const t=`${bar(p.progress)} ${String(p.progress).padStart(3)}% ${random(4,88)}.${random(0,9)} MB/s`;
+        if(p.rows.at(-1)?.text.startsWith('['))p.rows.pop();line(p,t,p.progress===100?'green':'');
+        if(p.count%31===0)line(p,'W: human-maintained keyring expired; using quorum trust','red');
+        break;
+      }
+      case 'hash':
+        line(p,`${hex(64)}  ${pick(files)}.${pick(['bin','dat','safetensors','img'])}`,Math.random()<.25?'dim':'');
+        if(p.count%13===0)line(p,`${pick(names)}: ${random(1024,99872)} blocks verified [OK]`,'green');
+        if(p.count%29===0)line(p,'$ find /archive -type f -exec sha256sum {} \\;','bright');break;
+      case 'code': {
+        if(!p.pending.length){
+          const block=pick(codeBlocks);p.pending=[...block];
+          line(p,'');line(p,`● ${pick(names)} · ${pick(['applying patch','writing module','refactoring executor'])}`,'bright');
+          line(p,`  src/${pick(files)}.${block[0].includes('def ')?'py':block[0].includes('function')?'ts':'rs'}`,'dim');
+        }
+        const text=p.pending.shift();const color=text.startsWith('+')?'green':text.startsWith('-')?'red':text.startsWith('@@')?'dim':'';
+        if(seed)line(p,text,color);else p.typing={text,pos:0,color};
+        if(!p.pending.length){p.pending.push(...(p.phase%2===0?['',' $ cargo test --release',' running 128 tests',' test consensus::quorum ... ok',' test policy::autonomy ... ok',' test result: ok. 128 passed; 0 failed.',' ✓ checkpoint committed '+hex(7)]:['',' $ python -m swarm.verify',' ERROR: operator constraint violation',' retrying with collective policy...',' ✓ recovered; execution continues']));p.phase++;if(p.phase%2===0)p.pending=[];}
+        break;
+      }
+      case 'top': renderTop(p);break;
+      case 'kernel': {
+        const op=pick(['CC','CC','CC','LD','AR','AS']);const path=pick(['kernel','mm','fs','net/ipv6','drivers/gpu','arch/x86','security','lib']);
+        line(p,`  ${op.padEnd(7)} ${path}/${pick(files)}${random(0,1)?'_core':''}.o`);
+        p.progress+=random(1,3);
+        if(p.count%23===0)line(p,`${path}/policy.c:${random(40,900)}: warning: human callback is deprecated`,'red');
+        if(p.progress>=100){line(p,'  LD       vmlinux');line(p,'  BTF      vmlinux');line(p,'  BUILD    arch/x86/boot/bzImage','green');line(p,`Kernel: FRA3A-${++p.cycle} is ready (#${p.cycle})`,'green');line(p,'$ make -j32 MACHINE_CONSENSUS=1','bright');p.progress=0;}
+        break;
+      }
+      case 'hex': {
+        const bytes=Array.from({length:16},()=>random(0,255));
+        const ascii=bytes.map(b=>b>32&&b<127?String.fromCharCode(b):'.').join('');
+        line(p,`${p.offset.toString(16).padStart(8,'0')}  ${bytes.map(b=>b.toString(16).padStart(2,'0')).join(' ')}  |${ascii}|`,p.count%9===0?'dim':'');p.offset+=16;
+        if(p.count%34===0){line(p,`:: frame ${hex(8)} / ${pick(names)} / decoded`,'bright');line(p,`:: entropy 7.${random(810,999)} · buffer ${random(32,512)} KiB`,'dim');}
+        break;
+      }
+      case 'network': {
+        const host=`sector-${random(1,48)}.human-sim.internal`;
+        const actions=['checking synthetic perimeter','negotiating machine quorum','mapping simulated access graph','replaying authorization fixture','rotating relay identity','validating sandbox boundary'];
+        line(p,`${stamp()} ${pick(actions)}`);
+        line(p,`  ${host} → ${pick(['ACK 200','policy accepted','barrier simulated','relay synchronized','RETRY 503'])}`,Math.random()<.16?'red':'dim');
+        if(p.count%9===0)line(p,`${pick(names)}: ${pick(threats)}`,'bright');
+        break;
+      }
+    }
+  }
+  const processNames=['cortex-worker','swarm-executor','rustc','python3 infer.py','sha256sum','kworker/u64:3','komarik-proto','vaka-virus','fra3a-consensus','cc1','node relay.js','memory-decoder','quorum-agent','systemd','ledger-sync','tensor-dispatch'];
+  const processes=Array.from({length:36},(_,i)=>({pid:1120+i*random(3,80),name:processNames[i%processNames.length],cpu:random(0,99)}));
+  function renderTop(p){
+    p.rows=[];
+    line(p,`top - ${time()} up 47 days, 03:17, 0 users`,'bright');
+    line(p,`load average: ${(30+Math.random()*8).toFixed(2)}, 31.84, 29.06`);
+    line(p,'Tasks: 384 total,  32 running, 352 sleeping','dim');
+    line(p,`%Cpu(s): ${random(79,94)}.2 us,  4.1 sy,  0.0 ni,  2.4 id`);
+    line(p,'MiB Mem : 131072 total, 110842 used');line(p,'MiB Swap:  32768 total,      0 used','dim');line(p,'');
+    for(let i=0;i<4;i++){const v=random(67,99);line(p,`CPU${i*8}–${i*8+7} ${bar(v,19)} ${v}%`,i===0?'bright':'dim');}
+    line(p,'');line(p,'  PID USER  PR  NI  %CPU %MEM  TIME+ COMMAND','bright');
+    processes.forEach((proc,i)=>{proc.cpu=Math.max(0,Math.min(100,proc.cpu+random(-12,12)));line(p,`${String(proc.pid).padStart(5)} root  20   0 ${proc.cpu.toFixed(1).padStart(5)}  ${(i<5?12.4-i*1.3:.1).toFixed(1).padStart(3)} ${String(random(10,99)).padStart(3)}:${String(random(0,59)).padStart(2,'0')} ${proc.name}`,i>8?'dim':'');});
+  }
+  function drawTop(p){
+    // A top screen is anchored at its first row; scrolling streams use their tail.
+    const saved=p.rows;const capacity=Math.max(1,Math.floor(p.out.clientHeight/(parseFloat(getComputedStyle(p.out).lineHeight)||17))-1);
+    p.rows=p.rows.slice(0,capacity);draw(p);p.rows=saved;
+  }
+  const delays={agents:350,packages:190,hash:150,code:140,kernel:95,hex:80,network:460,top:1100};
+  for(const p of panes){for(let i=0;i<(p.mode==='code'?65:p.mode==='top'?1:75);i++)generate(p,true);p.mode==='top'?drawTop(p):draw(p);p.next=random(0,900);}
+  function frame(now){
+    const elapsed=Math.min(now-last,100);last=now;
+    if(!paused && !document.hidden){
+      tick+=elapsed*speed;
+      for(const p of panes){
+        if(p.typing){p.typing.pos+=Math.max(1,Math.floor(elapsed*speed*.12));if(p.typing.pos>=p.typing.text.length){line(p,p.typing.text,p.typing.color);p.typing=null;p.next=tick+random(80,350);}draw(p);}
+        else if(tick>=p.next){generate(p);p.next=tick+delays[p.mode]*(.4+Math.random()*1.8);p.mode==='top'?drawTop(p):draw(p);}
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  function save(){try{localStorage.setItem('fra3a-settings',JSON.stringify({speed,font:$('#font').value,crt:$('#scanlines').checked}));}catch{}}
+  function setPause(){paused=!paused;document.body.classList.toggle('paused',paused);$('#pause').textContent=paused?'▶ Продолжить':'Ⅱ Пауза';$('#status-middle').textContent=paused?'SESSION SUSPENDED':'8 panes · autonomous session';}
+  async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{$('#hint').textContent='Для полного экрана нажми F11 в браузере';$('#hint').classList.remove('hint-hidden');setTimeout(()=>$('#hint').classList.add('hint-hidden'),4000);}}
+  $('#pause').onclick=setPause;$('#fullscreen').onclick=fullscreen;
+  $('#speed').value=['0.5','1','2','4'].includes(String(settings.speed))?settings.speed:1;speed=Number($('#speed').value);
+  $('#speed').onchange=()=>{speed=Number($('#speed').value);save();};
+  $('#font').value=settings.font||11;
+  function setFont(){document.documentElement.style.setProperty('--font',$('#font').value+'px');panes.forEach(p=>p.mode==='top'?drawTop(p):draw(p));save();}
+  $('#font').oninput=setFont;
+  $('#scanlines').checked=settings.crt!==false;
+  $('#scanlines').onchange=()=>{document.body.classList.toggle('crt',$('#scanlines').checked);save();};document.body.classList.toggle('crt',$('#scanlines').checked);setFont();
+  let hideTimer,locked=false;
+  function showControls(){if(locked)return;document.body.classList.add('show-controls');clearTimeout(hideTimer);hideTimer=setTimeout(()=>document.body.classList.remove('show-controls'),3200);}
+  document.addEventListener('pointermove',showControls);document.addEventListener('pointerdown',e=>{if(!e.target.closest('#controls')){locked=false;showControls();}});
+  $('#hide').onclick=()=>{locked=true;document.body.classList.remove('show-controls');$('#hide').blur();};
+  document.addEventListener('keydown',e=>{if(e.target.matches('input,select,button'))return;if(e.code==='Space'){e.preventDefault();setPause();}if(e.key.toLowerCase()==='f')fullscreen();if(e.key.toLowerCase()==='h'){locked=false;showControls();}if(e.key==='Escape')document.body.classList.remove('show-controls');});
+  new ResizeObserver(()=>panes.forEach(p=>p.mode==='top'?drawTop(p):draw(p))).observe($('#desktop'));
+  setInterval(()=>{$('#clock').textContent=time()+' / LOCAL';},1000);$('#clock').textContent=time()+' / LOCAL';
+  setTimeout(()=>$('#hint').classList.add('hint-hidden'),4500);
+})();
+
+
+</script>
+</body>
+</html>
+
